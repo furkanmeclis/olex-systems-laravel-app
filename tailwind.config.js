@@ -9,11 +9,12 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
     ],
-
+    darkMode:"class",
     theme: {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                avaganti:['Avaganti Regular',"sans-serif"],
             },
         },
     },

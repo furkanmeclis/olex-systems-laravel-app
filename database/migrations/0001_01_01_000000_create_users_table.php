@@ -15,8 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->enum('role', ['super','central','central_salesman','central_contact','central_worker', 'admin','worker'])->default('worker');
+            $table->string('parent_id')->nullable()->comment('This id is the workers dealer_id');
             $table->string('password');
+            $table->boolean('active')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });

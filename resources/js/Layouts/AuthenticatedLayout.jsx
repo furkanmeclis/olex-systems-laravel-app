@@ -1,15 +1,46 @@
-import { useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
-
+import {Link, usePage} from '@inertiajs/react';
+import { Tag } from 'primereact/tag';
+import {Toast} from "primereact/toast";
 export default function Authenticated({ user, header, children }) {
+    const toast = useRef(null);
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-
+    const {flash} = usePage().props;
+    useEffect(() => {
+        if (flash.success !== null){
+            toast.current.show({severity: 'success', summary: 'İşlem Başarılı', detail: flash.success});
+        }
+        if (flash.error !== null){
+            toast.current.show({severity: 'error', summary: 'Hata', detail: flash.error});
+        }
+    },[flash]);
+    const badgeRole = () => {
+        switch (user.role) {
+            case 'super':
+                return <>
+                    <Tag severity="danger" value="Super" />
+                </>;
+            case 'admin':
+                return <>
+                    <Tag severity="warning" value="Admin" />
+                </>
+            case 'worker':
+                return <>
+                    <Tag severity="success" value="Worker" />
+                </>
+            default:
+                return <>
+                    <Tag severity="help" value="Central" />
+                </>
+        }
+    }
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+            <Toast ref={toast} />
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
@@ -20,10 +51,61 @@ export default function Authenticated({ user, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
+                            <div className="hidden space-x-2 sm:-my-px sm:ms-10 sm:flex">
+                                {user.role === 'super' && (<>
+                                    <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                        Anasayfa
+                                    </NavLink>
+                                    <NavLink href={route('super.central.index')} active={route().current('super.central*')}>
+                                        Merkez Çalışanları
+                                    </NavLink>
+                                    <NavLink href={route('super.dealers.index')} active={route().current('super.dealers*')}>
+                                        Bayiler
+                                    </NavLink>
+                                    <NavLink href={route('super.workers.index')} active={route().current('super.workers*')}>
+                                        Çalışanlar
+                                    </NavLink>
+                                    <NavLink href={route('super.products.index')} active={route().current('super.products*')}>
+                                        Ürünler
+                                    </NavLink>
+                                    <NavLink href={route('super.orders.index')} active={route().current('super.orders*')}>
+                                        Siparişler
+                                    </NavLink>
+                                    <NavLink href={route('super.stock-management.index')} active={route().current('super.stock-management*')}>
+                                        Stok Yönetimi
+                                    </NavLink>
+                                    <NavLink href={route('super.customers.index')} active={route().current('super.customers*')}>
+                                        Müşteriler
+                                    </NavLink>
+                                </>)}
+                                {String(user.role).includes('central') && (<>
+                                    <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                        Anasayfa
+                                    </NavLink>
+                                    <NavLink href={route('central.dealers.index')} active={route().current('central.dealers*')}>
+                                        Bayiler
+                                    </NavLink>
+                                    <NavLink href={route('central.products.index')} active={route().current('central.products*')}>
+                                        Ürünler
+                                    </NavLink>
+                                    <NavLink href={route('central.orders.index')} active={route().current('central.orders*')}>
+                                        Siparişler
+                                    </NavLink>
+                                    <NavLink href={route('central.stock-management.index')} active={route().current('central.stock-management*')}>
+                                        Stok Yönetimi
+                                    </NavLink>
+                                </>)}
+                                {String(user.role).includes('worker') && (<>
+                                    <NavLink href={route('worker.index')} active={route().current('worker.index')}>
+                                        Anasayfa
+                                    </NavLink>
+                                    <NavLink href={route('worker.customers.index')} active={route().current('worker.customers*')}>
+                                        Müşteriler
+                                    </NavLink>
+                                    <NavLink href={route('worker.services.index')} active={route().current('worker.services*')}>
+                                        Hizmetler
+                                    </NavLink>
+                                </>)}
                             </div>
                         </div>
 
@@ -36,7 +118,9 @@ export default function Authenticated({ user, header, children }) {
                                                 type="button"
                                                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                                {user.name}
+                                               <span>
+                                                    {badgeRole()} {user.name}
+                                               </span>
 
                                                 <svg
                                                     className="ms-2 -me-0.5 h-4 w-4"
@@ -55,9 +139,9 @@ export default function Authenticated({ user, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                                        <Dropdown.Link href={route('profile.edit')}>Profil</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
+                                            Çıkış Yap
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -93,20 +177,20 @@ export default function Authenticated({ user, header, children }) {
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
+                            Anasayfa
                         </ResponsiveNavLink>
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                         <div className="px-4">
-                            <div className="font-medium text-base text-gray-800 dark:text-gray-200">{user.name}</div>
+                            <div className="font-medium text-base text-gray-800 dark:text-gray-200">{badgeRole()} {user.name}</div>
                             <div className="font-medium text-sm text-gray-500">{user.email}</div>
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('profile.edit')}>Profil</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                                Log Out
+                                Çıkış Yap
                             </ResponsiveNavLink>
                         </div>
                     </div>

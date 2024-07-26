@@ -25,15 +25,15 @@ export default function ConfirmPassword() {
 
     return (
         <GuestLayout>
-            <Head title="Confirm Password" />
+            <Head title="Şifrenizi Onaylayın" />
 
             <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                This is a secure area of the application. Please confirm your password before continuing.
+                Bu, uygulamanın güvenli bir alanıdır. Devam etmeden önce lütfen şifrenizi doğrulayın.
             </div>
 
             <form onSubmit={submit}>
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value="Şifre" />
 
                     <TextInput
                         id="password"
@@ -50,7 +50,7 @@ export default function ConfirmPassword() {
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Confirm
+                        Onayla
                     </PrimaryButton>
                 </div>
             </form>

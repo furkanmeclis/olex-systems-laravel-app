@@ -13,22 +13,22 @@ export default function VerifyEmail({ status }) {
 
     return (
         <GuestLayout>
-            <Head title="Email Verification" />
+            <Head title="Eposta Doğrulama" />
 
             <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                Thanks for signing up! Before getting started, could you verify your email address by clicking on the
-                link we just emailed to you? If you didn't receive the email, we will gladly send you another.
+                Üye olduğunuz için teşekkürler! Başlamadan önce, simgesine tıklayarak e-posta adresinizi doğrulayabilir misiniz?
+                az önce size e-postayla gönderdiğimiz bağlantı? E-postayı almadıysanız, size memnuniyetle başka bir e-posta göndeririz.
             </div>
 
             {status === 'verification-link-sent' && (
                 <div className="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                    A new verification link has been sent to the email address you provided during registration.
+                    Kayıt sırasında verdiğiniz e-posta adresine yeni bir doğrulama bağlantısı gönderildi.
                 </div>
             )}
 
             <form onSubmit={submit}>
                 <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>Resend Verification Email</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Doğrulama e-postasını tekrar gönder</PrimaryButton>
 
                     <Link
                         href={route('logout')}
@@ -36,7 +36,7 @@ export default function VerifyEmail({ status }) {
                         as="button"
                         className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
-                        Log Out
+                        Çıkış Yap
                     </Link>
                 </div>
             </form>
