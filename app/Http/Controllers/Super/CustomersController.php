@@ -25,7 +25,7 @@ class CustomersController extends Controller
     public function index()
     {
         $customers = $this->getAllCustomers();
-        return Inertia::render('Super/CustomersController/Index',[
+        return Inertia::render('Super/Customers/Index',[
             "customersAll" => $customers
         ]);
     }
